@@ -97,28 +97,13 @@ function CustomVideoPlayer({ open, onClose }) {
 
   useEffect(() => {
     if (!open) return;
-    const y = window.scrollY;
-    const b = document.body;
-    b.dataset.scrollLockY = String(y);
-    b.style.setProperty("position", "fixed", "important");
-    b.style.setProperty("top", `-${y}px`, "important");
-    b.style.setProperty("left", "0", "important");
-    b.style.setProperty("right", "0", "important");
-    b.style.setProperty("width", "100%", "important");
-    b.style.setProperty("overflow", "hidden", "important");
+    const html = document.documentElement;
+    const prev = { html: html.style.overflow, body: document.body.style.overflow };
+    html.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
     return () => {
-      const back = b.dataset.scrollLockY;
-      b.style.removeProperty("position");
-      b.style.removeProperty("top");
-      b.style.removeProperty("left");
-      b.style.removeProperty("right");
-      b.style.removeProperty("width");
-      b.style.removeProperty("overflow");
-      delete b.dataset.scrollLockY;
-      if (back !== undefined) {
-        const top = parseInt(back, 10) || 0;
-        requestAnimationFrame(() => window.scrollTo(0, top));
-      }
+      html.style.overflow = prev.html;
+      document.body.style.overflow = prev.body;
     };
   }, [open]);
 
@@ -159,12 +144,19 @@ function CustomVideoPlayer({ open, onClose }) {
       {open && (
         <div
           key="fitnerd-video-modal-root"
-          className="pointer-events-auto fixed left-0 top-0 z-[100] h-[100dvh] max-h-[100dvh] w-full overflow-x-hidden overflow-y-auto overscroll-none"
+          className="pointer-events-auto box-border flex min-h-0 w-full min-w-0 max-w-full items-center justify-center overflow-x-hidden overflow-y-auto overscroll-contain p-4 sm:p-6"
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 9999,
+            width: "100%",
+            maxWidth: "100vw",
+            margin: 0,
+          }}
         >
-          <div className="pointer-events-auto relative h-[100dvh] w-full p-4 sm:p-6">
             <button
               type="button"
-              className="absolute inset-0 h-full w-full min-h-full bg-black/80 backdrop-blur-sm"
+              className="absolute inset-0 z-0 border-0 bg-black/80 backdrop-blur-sm"
               aria-label="Close video"
               onClick={onClose}
             />
@@ -172,10 +164,10 @@ function CustomVideoPlayer({ open, onClose }) {
               role="dialog"
               aria-modal="true"
               aria-label="Fitnerd film"
-              className="absolute left-1/2 top-1/2 z-10 w-[min(100%,56rem)] max-w-4xl"
-              initial={{ scale: 0.96, opacity: 0, x: "-50%", y: "-50%" }}
-              animate={{ scale: 1, opacity: 1, x: "-50%", y: "-50%" }}
-              exit={{ scale: 0.98, opacity: 0, x: "-50%", y: "-50%" }}
+              className="relative z-10 w-full max-w-4xl shrink-0"
+              initial={{ scale: 0.97, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.98, opacity: 0 }}
               transition={{ type: "spring", damping: 28, stiffness: 320 }}
             >
             <div className="absolute -inset-px rounded-[1.35rem] bg-gradient-to-br from-[#62e58f]/50 via-white/10 to-[#62e58f]/20 p-px">
@@ -288,7 +280,6 @@ function CustomVideoPlayer({ open, onClose }) {
               </div>
             </div>
           </motion.div>
-          </div>
         </div>
       )}
     </AnimatePresence>
