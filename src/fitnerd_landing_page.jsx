@@ -139,36 +139,62 @@ function CustomVideoPlayer({ open, onClose }) {
     v.currentTime = parseFloat(e.target.value) * v.duration;
   };
 
-  const node = (
-    <AnimatePresence>
-      {open && (
-        <div
-          key="fitnerd-video-modal-root"
-          className="pointer-events-auto box-border flex min-h-0 w-full min-w-0 max-w-full items-center justify-center overflow-x-hidden overflow-y-auto overscroll-contain p-4 sm:p-6"
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 9999,
-            width: "100%",
-            maxWidth: "100vw",
-            margin: 0,
-          }}
-        >
+  const modalWrapperStyle = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 2147482000,
+    width: "100vw",
+    minWidth: 0,
+    minHeight: "100dvh",
+    height: "100dvh",
+    margin: 0,
+    padding: 0,
+    boxSizing: "border-box",
+    overflow: "hidden",
+    pointerEvents: "auto",
+  };
+
+  const panelStyle = {
+    position: "absolute",
+    left: "50%",
+    top: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "min(100vw - 2rem, 56rem)",
+    maxWidth: "100%",
+    zIndex: 1,
+    boxSizing: "border-box",
+  };
+
+  const node = !open ? null : (
+    <div id="fitnerd-video-portal" style={modalWrapperStyle}>
             <button
               type="button"
-              className="absolute inset-0 z-0 border-0 bg-black/80 backdrop-blur-sm"
+              className="absolute z-0 border-0 bg-black/80 backdrop-blur-sm"
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                width: "100%",
+                height: "100%",
+                margin: 0,
+                padding: 0,
+                cursor: "pointer",
+                display: "block",
+              }}
               aria-label="Close video"
               onClick={onClose}
             />
-            <motion.div
+            <div
               role="dialog"
               aria-modal="true"
               aria-label="Fitnerd film"
-              className="relative z-10 w-full max-w-4xl shrink-0"
-              initial={{ scale: 0.97, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.98, opacity: 0 }}
-              transition={{ type: "spring", damping: 28, stiffness: 320 }}
+              className="relative w-full"
+              style={panelStyle}
             >
             <div className="absolute -inset-px rounded-[1.35rem] bg-gradient-to-br from-[#62e58f]/50 via-white/10 to-[#62e58f]/20 p-px">
               <div className="overflow-hidden rounded-[1.3rem] bg-[#0a0c0a] shadow-[0_0_60px_rgba(98,229,143,0.12)]">
@@ -279,12 +305,10 @@ function CustomVideoPlayer({ open, onClose }) {
                 </div>
               </div>
             </div>
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
+            </div>
+    </div>
   );
-  if (typeof document === "undefined") return null;
+  if (typeof document === "undefined" || !node) return null;
   return createPortal(node, document.body);
 }
 
