@@ -139,53 +139,47 @@ function CustomVideoPlayer({ open, onClose }) {
     v.currentTime = parseFloat(e.target.value) * v.duration;
   };
 
-  const modalWrapperStyle = {
+  const backdropStyle = {
     position: "fixed",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    zIndex: 2147482000,
+    zIndex: 2147481990,
     width: "100vw",
-    minWidth: 0,
-    minHeight: "100dvh",
     height: "100dvh",
+    minHeight: "100dvh",
     margin: 0,
     padding: 0,
+    border: 0,
+    display: "block",
     boxSizing: "border-box",
-    overflow: "hidden",
-    pointerEvents: "auto",
+    cursor: "pointer",
+    background: "rgba(0, 0, 0, 0.78)",
   };
 
   const panelStyle = {
-    position: "absolute",
-    left: "50%",
+    position: "fixed",
     top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    margin: 0,
     transform: "translate(-50%, -50%)",
     width: "min(100vw - 2rem, 56rem)",
-    maxWidth: "100%",
-    zIndex: 1,
+    maxWidth: "100vw",
+    zIndex: 2147482000,
     boxSizing: "border-box",
+    maxHeight: "min(100dvh - 2rem, 92dvh)",
+    overflow: "auto",
   };
 
   const node = !open ? null : (
-    <div id="fitnerd-video-portal" style={modalWrapperStyle}>
+    <>
             <button
               type="button"
-              className="absolute z-0 border-0 bg-black/80 backdrop-blur-sm"
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                width: "100%",
-                height: "100%",
-                margin: 0,
-                padding: 0,
-                cursor: "pointer",
-                display: "block",
-              }}
+              className="backdrop-blur-sm"
+              style={backdropStyle}
               aria-label="Close video"
               onClick={onClose}
             />
@@ -193,7 +187,6 @@ function CustomVideoPlayer({ open, onClose }) {
               role="dialog"
               aria-modal="true"
               aria-label="Fitnerd film"
-              className="relative w-full"
               style={panelStyle}
             >
             <div className="absolute -inset-px rounded-[1.35rem] bg-gradient-to-br from-[#62e58f]/50 via-white/10 to-[#62e58f]/20 p-px">
@@ -306,7 +299,7 @@ function CustomVideoPlayer({ open, onClose }) {
               </div>
             </div>
             </div>
-    </div>
+    </>
   );
   if (typeof document === "undefined" || !node) return null;
   return createPortal(node, document.body);
