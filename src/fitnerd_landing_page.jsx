@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
-const VIDEO_SRC = "/fitnerdUGC(-2interfaces).mp4";
+const VIDEO_SRC = "/fitnerdpromo.mp4";
 
 const Pill = ({ children }) => (
   <span className="rounded-full border border-white/10 bg-white/[0.055] px-4 py-2 text-sm text-white/70">
