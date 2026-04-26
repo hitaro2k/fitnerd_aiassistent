@@ -139,43 +139,49 @@ function CustomVideoPlayer({ open, onClose }) {
     v.currentTime = parseFloat(e.target.value) * v.duration;
   };
 
-  const backdropStyle = {
+  const modalLayerStyle = {
     position: "fixed",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    inset: 0,
     zIndex: 2147481990,
     width: "100vw",
     height: "100dvh",
     minHeight: "100dvh",
     margin: 0,
+    padding: "1rem",
+    border: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    boxSizing: "border-box",
+    overflow: "hidden",
+  };
+
+  const backdropStyle = {
+    position: "absolute",
+    inset: 0,
+    width: "100%",
+    height: "100%",
+    margin: 0,
     padding: 0,
     border: 0,
     display: "block",
-    boxSizing: "border-box",
     cursor: "pointer",
     background: "rgba(0, 0, 0, 0.78)",
   };
 
   const panelStyle = {
-    position: "fixed",
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
+    position: "relative",
     margin: 0,
-    transform: "translate(-50%, -50%)",
-    width: "min(100vw - 2rem, 56rem)",
-    maxWidth: "100vw",
-    zIndex: 2147482000,
+    width: "min(calc(100vw - 2rem), calc((100dvh - 9rem) * 16 / 9), 56rem)",
+    maxWidth: "calc(100vw - 2rem)",
     boxSizing: "border-box",
-    maxHeight: "min(100dvh - 2rem, 92dvh)",
-    overflow: "auto",
+    maxHeight: "calc(100dvh - 2rem)",
+    overflow: "hidden",
+    pointerEvents: "auto",
   };
 
   const node = !open ? null : (
-    <>
+    <div style={modalLayerStyle}>
             <button
               type="button"
               className="backdrop-blur-sm"
@@ -191,8 +197,8 @@ function CustomVideoPlayer({ open, onClose }) {
               style={panelStyle}
             >
             <div className="relative w-full rounded-[1.35rem] bg-gradient-to-br from-[#62e58f]/50 via-white/10 to-[#62e58f]/20 p-px">
-              <div className="overflow-hidden rounded-[1.3rem] bg-[#0a0c0a] shadow-[0_0_60px_rgba(98,229,143,0.12)]">
-                <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+              <div className="flex max-h-[calc(100dvh-2rem)] flex-col overflow-hidden rounded-[1.3rem] bg-[#0a0c0a] shadow-[0_0_60px_rgba(98,229,143,0.12)]">
+                <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-4 py-3">
                   <div className="text-xs font-medium uppercase tracking-[0.2em] text-[#62e58f]">Watch film</div>
                   <button
                     type="button"
@@ -206,7 +212,7 @@ function CustomVideoPlayer({ open, onClose }) {
                   </button>
                 </div>
                 <div
-                  className="relative aspect-video cursor-pointer bg-black"
+                  className="relative aspect-video min-h-0 cursor-pointer bg-black"
                   onClick={togglePlay}
                 >
                   <video
@@ -244,7 +250,7 @@ function CustomVideoPlayer({ open, onClose }) {
                     )}
                   </AnimatePresence>
                 </div>
-                <div className="flex flex-col gap-3 border-t border-white/10 bg-black/60 px-4 py-3 sm:flex-row sm:items-center sm:gap-4">
+                <div className="flex shrink-0 flex-col gap-3 border-t border-white/10 bg-black/60 px-4 py-3 sm:flex-row sm:items-center sm:gap-4">
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
@@ -300,7 +306,7 @@ function CustomVideoPlayer({ open, onClose }) {
               </div>
             </div>
             </div>
-    </>
+    </div>
   );
   if (typeof document === "undefined" || !node) return null;
   return createPortal(node, document.body);
