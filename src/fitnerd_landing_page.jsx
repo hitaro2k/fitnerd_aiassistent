@@ -187,9 +187,10 @@ function CustomVideoPlayer({ open, onClose }) {
               role="dialog"
               aria-modal="true"
               aria-label="Fitnerd film"
+              className="w-full"
               style={panelStyle}
             >
-            <div className="absolute -inset-px rounded-[1.35rem] bg-gradient-to-br from-[#62e58f]/50 via-white/10 to-[#62e58f]/20 p-px">
+            <div className="relative w-full rounded-[1.35rem] bg-gradient-to-br from-[#62e58f]/50 via-white/10 to-[#62e58f]/20 p-px">
               <div className="overflow-hidden rounded-[1.3rem] bg-[#0a0c0a] shadow-[0_0_60px_rgba(98,229,143,0.12)]">
                 <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
                   <div className="text-xs font-medium uppercase tracking-[0.2em] text-[#62e58f]">Watch film</div>
