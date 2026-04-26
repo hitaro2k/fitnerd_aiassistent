@@ -89,13 +89,38 @@ function CustomVideoPlayer({ open, onClose }) {
     };
     if (open) {
       document.addEventListener("keydown", onKey);
-      document.body.style.overflow = "hidden";
     }
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
     };
   }, [open, onClose]);
+
+  useEffect(() => {
+    if (!open) return;
+    const y = window.scrollY;
+    const b = document.body;
+    b.dataset.scrollLockY = String(y);
+    b.style.setProperty("position", "fixed", "important");
+    b.style.setProperty("top", `-${y}px`, "important");
+    b.style.setProperty("left", "0", "important");
+    b.style.setProperty("right", "0", "important");
+    b.style.setProperty("width", "100%", "important");
+    b.style.setProperty("overflow", "hidden", "important");
+    return () => {
+      const back = b.dataset.scrollLockY;
+      b.style.removeProperty("position");
+      b.style.removeProperty("top");
+      b.style.removeProperty("left");
+      b.style.removeProperty("right");
+      b.style.removeProperty("width");
+      b.style.removeProperty("overflow");
+      delete b.dataset.scrollLockY;
+      if (back !== undefined) {
+        const top = parseInt(back, 10) || 0;
+        requestAnimationFrame(() => window.scrollTo(0, top));
+      }
+    };
+  }, [open]);
 
   const fmt = (s) => {
     if (!Number.isFinite(s) || s < 0) return "0:00";
@@ -132,29 +157,27 @@ function CustomVideoPlayer({ open, onClose }) {
   const node = (
     <AnimatePresence>
       {open && (
-        <motion.div
-          className="pointer-events-auto fixed inset-0 z-[100] box-border flex min-h-[100dvh] w-full items-center justify-center overflow-y-auto overscroll-contain p-4 sm:p-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.25 }}
+        <div
+          key="fitnerd-video-modal-root"
+          className="pointer-events-auto fixed left-0 top-0 z-[100] h-[100dvh] max-h-[100dvh] w-full overflow-x-hidden overflow-y-auto overscroll-none"
         >
-          <button
-            type="button"
-            className="absolute inset-0 min-h-full w-full bg-black/80 backdrop-blur-sm"
-            aria-label="Close video"
-            onClick={onClose}
-          />
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-label="Fitnerd film"
-            className="relative z-10 m-auto w-full max-w-4xl shrink-0"
-            initial={{ scale: 0.94, opacity: 0, y: 12 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.96, opacity: 0, y: 8 }}
-            transition={{ type: "spring", damping: 28, stiffness: 320 }}
-          >
+          <div className="pointer-events-auto relative h-[100dvh] w-full p-4 sm:p-6">
+            <button
+              type="button"
+              className="absolute inset-0 h-full w-full min-h-full bg-black/80 backdrop-blur-sm"
+              aria-label="Close video"
+              onClick={onClose}
+            />
+            <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-label="Fitnerd film"
+              className="absolute left-1/2 top-1/2 z-10 w-[min(100%,56rem)] max-w-4xl"
+              initial={{ scale: 0.96, opacity: 0, x: "-50%", y: "-50%" }}
+              animate={{ scale: 1, opacity: 1, x: "-50%", y: "-50%" }}
+              exit={{ scale: 0.98, opacity: 0, x: "-50%", y: "-50%" }}
+              transition={{ type: "spring", damping: 28, stiffness: 320 }}
+            >
             <div className="absolute -inset-px rounded-[1.35rem] bg-gradient-to-br from-[#62e58f]/50 via-white/10 to-[#62e58f]/20 p-px">
               <div className="overflow-hidden rounded-[1.3rem] bg-[#0a0c0a] shadow-[0_0_60px_rgba(98,229,143,0.12)]">
                 <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
@@ -265,7 +288,8 @@ function CustomVideoPlayer({ open, onClose }) {
               </div>
             </div>
           </motion.div>
-        </motion.div>
+          </div>
+        </div>
       )}
     </AnimatePresence>
   );
