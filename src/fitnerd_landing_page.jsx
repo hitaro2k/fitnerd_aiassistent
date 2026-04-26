@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 const VIDEO_SRC = "/fitnerdUGC(-2interfaces).mp4";
@@ -128,11 +129,11 @@ function CustomVideoPlayer({ open, onClose }) {
     v.currentTime = parseFloat(e.target.value) * v.duration;
   };
 
-  return (
+  const node = (
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8"
+          className="pointer-events-auto fixed inset-0 z-[100] box-border flex min-h-[100dvh] w-full items-center justify-center overflow-y-auto overscroll-contain p-4 sm:p-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -140,7 +141,7 @@ function CustomVideoPlayer({ open, onClose }) {
         >
           <button
             type="button"
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            className="absolute inset-0 min-h-full w-full bg-black/80 backdrop-blur-sm"
             aria-label="Close video"
             onClick={onClose}
           />
@@ -148,7 +149,7 @@ function CustomVideoPlayer({ open, onClose }) {
             role="dialog"
             aria-modal="true"
             aria-label="Fitnerd film"
-            className="relative z-10 w-full max-w-4xl"
+            className="relative z-10 m-auto w-full max-w-4xl shrink-0"
             initial={{ scale: 0.94, opacity: 0, y: 12 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.96, opacity: 0, y: 8 }}
@@ -268,6 +269,8 @@ function CustomVideoPlayer({ open, onClose }) {
       )}
     </AnimatePresence>
   );
+  if (typeof document === "undefined") return null;
+  return createPortal(node, document.body);
 }
 
 export default function FitnerdLandingPage() {
