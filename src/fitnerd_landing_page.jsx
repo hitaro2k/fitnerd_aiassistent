@@ -149,7 +149,7 @@ export default function FitnerdLandingPage() {
           <div>
             <p className="mb-4 text-sm uppercase tracking-[0.3em] text-white/40">Face scan</p>
             <h2 className="max-w-3xl text-4xl font-semibold tracking-tight md:text-6xl">
-              It understands before it pushes.
+                Not a program. A response.
             </h2>
           </div>
           <p className="max-w-xl text-lg leading-relaxed text-white/55">
